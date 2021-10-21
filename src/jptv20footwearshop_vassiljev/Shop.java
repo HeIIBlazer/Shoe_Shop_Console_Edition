@@ -5,11 +5,14 @@ import java.util.Scanner;
 import MyClasses.Client;
 import MyClasses.Purchased;
 import MyClasses.Model;
+import MyClasses.ShoeSize;
+import java.util.Arrays;
 public class Shop {
    private Scanner scanner = new Scanner(System.in);
    private Client[] clients= new Client[10];
    private Model[] models=new Model[10];
    private Purchased[] purchased=new Purchased[10];
+   private ShoeSize[] sizes=new ShoeSize[10];
    float allCash=0;
    public void run(){
     String repeat ="r";
@@ -102,6 +105,18 @@ public class Shop {
       model.setShoeMaker(scanner.nextLine());
       System.out.println("Введите цену обуви: ");
       model.setShoePrice(scanner.nextFloat());
+      System.out.println("Сколько размеров эта пара имеет?: ");
+      int kolvo=scanner.nextInt();
+      ShoeSize[] shoeSize = new ShoeSize[kolvo];
+      for (int i = 0; i < kolvo; i++) {
+          ShoeSize size= new ShoeSize();
+          System.out.println("Введите размер обуви: ");
+          
+          size.setShoeSize(scanner.nextInt());scanner.nextLine();
+          shoeSize[i]=size;
+      }
+      model.setShoeSize(shoeSize);
+      
       return model;
   }
   private Purchased addPurchased(){
@@ -122,17 +137,24 @@ public class Shop {
         }
         System.out.println("Какую пару обуви вы бы хотели приобрести?: ");
         int numberModel=scanner.nextInt();scanner.nextLine();
+        System.out.println("Размеры этой пары");
+        for (int i = 0; i < models.length; i++) {
+            if(models[i]!=null){
+                System.out.println(i+1+": "+Arrays.toString(models[numberModel-1].getShoeSize()));
+            }
+        System.out.println("Какой размер вас интерисует?: ");
+        int razmer=scanner.nextInt();
         purchased1.setModels(models[numberModel-1]);
-        purchased1.setClient(clients[numberClient-1]); 
+        purchased1.setClient(clients[numberClient-1]);       
         if(purchased1.getClient().getMoney()>=purchased1.getModels().getShoePrice()){
             clients[numberClient-1].setMoney(clients[numberClient-1].getMoney()-models[numberModel-1].getShoePrice());
             allCash+=models[numberModel-1].getShoePrice();
         }
         else{
-            System.out.println("ДЕНЕГ МАЛО ЧЕЛ!!!!!!");
-                           
-}
-
+            System.out.println("ДЕНЕГ МАЛО ЧЕЛ!!!!!!");                      
+    }
+    }   
       return purchased1;
+    }
   }
-}
+

@@ -1,10 +1,14 @@
 
 package MyClasses;
 
+import java.util.Arrays;
+
+
 public class Model {
     private String ShoeName;
     private String ShoeMaker;
     private float ShoePrice;
+    private ShoeSize[] ShoeSize;
 
     public String getShoeName() {
         return ShoeName;
@@ -30,8 +34,30 @@ public class Model {
         this.ShoePrice = ShoePrice;
     }
 
+    public ShoeSize[] getShoeSize() {
+        return ShoeSize;
+    }
+
+    public void setShoeSize(ShoeSize[] ShoeSize) {
+        this.ShoeSize = ShoeSize;
+    }
+
+
     @Override
     public String toString() {
-        return "Shoes{" + "ShoeName=" + ShoeName + ", ShoeMaker=" + ShoeMaker + ", ShoePrice=" + ShoePrice + '}';
-    }  
-}
+        return "Model{" + "ShoeName=" + ShoeName + ", ShoeMaker=" + ShoeMaker + ", ShoePrice=" + ShoePrice + ", ShoeSize=" + Arrays.toString(ShoeSize) + '}';
+    }
+
+
+
+    }
+
+
+
+    
+    
+
+
+
+
+
