@@ -1,10 +1,11 @@
 
 package MyClasses;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class Model {
+public class Model implements Serializable {
     private String ShoeName;
     private String ShoeMaker;
     private float ShoePrice;

@@ -1,9 +1,11 @@
 
 package MyClasses;
 
+import java.io.Serializable;
 
 
-public class ShoeSize {
+
+public class ShoeSize implements Serializable {
    private int ShoeSize;
 
     public int getShoeSize() {

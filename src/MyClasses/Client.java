@@ -1,5 +1,8 @@
 package MyClasses;
-public class Client {
+
+import java.io.Serializable;
+
+public class Client implements Serializable  {
     String FirstName;
     String SecondName;
     String Phone;

@@ -1,18 +1,26 @@
 
 package jptv20footwearshop_vassiljev;
 
+import Interfaces.Keeping;
 import java.util.Scanner;
 import MyClasses.Client;
 import MyClasses.Purchased;
 import MyClasses.Model;
 import MyClasses.ShoeSize;
 import java.util.Arrays;
+import tools.SaveToFile;
 public class Shop {
    private Scanner scanner = new Scanner(System.in);
    private Client[] clients= new Client[10];
    private Model[] models=new Model[10];
    private Purchased[] purchased=new Purchased[10];
-   private ShoeSize[] sizes=new ShoeSize[10];
+   private Keeping keeper= new SaveToFile();
+public Shop() {
+    clients =keeper.loadClients();
+    models=keeper.loadModels();
+    purchased=keeper.loadHistories();
+    }
+   
    float allCash=0;
    public void run(){
     String repeat ="r";
@@ -39,6 +47,7 @@ public class Shop {
                     for (int i = 0; i < clients.length; i++) {
                         if(clients[i]==null){
                         clients[i]= addClient();
+                        keeper.saveClient(clients);
                         break;    
                         }
                     }
@@ -55,6 +64,7 @@ public class Shop {
                     for (int i = 0; i < models.length; i++) {
                         if(models[i]==null){
                             models[i]=addModel();
+                            keeper.saveModel(models);
                             break;
                         }
                     }
@@ -72,6 +82,7 @@ public class Shop {
                         for (int i = 0; i < purchased.length; i++) {  
                         if(purchased[i]==null){
                             purchased[i]=addPurchased();
+                            keeper.savePurchased(purchased);
                             break;
                         }
                         }
@@ -80,6 +91,7 @@ public class Shop {
                     System.out.println("---------Сколько магазин заработал------------");
                     System.out.println(allCash);
                     break;
+          
                 default:
                     System.out.println("Введите номер из списка!!!");
             }
@@ -142,8 +154,9 @@ public class Shop {
             if(models[i]!=null){
                 System.out.println(i+1+": "+Arrays.toString(models[numberModel-1].getShoeSize()));
             }
+        }
         System.out.println("Какой размер вас интерисует?: ");
-        int razmer=scanner.nextInt();
+        
         purchased1.setModels(models[numberModel-1]);
         purchased1.setClient(clients[numberClient-1]);       
         if(purchased1.getClient().getMoney()>=purchased1.getModels().getShoePrice()){
@@ -153,7 +166,7 @@ public class Shop {
         else{
             System.out.println("ДЕНЕГ МАЛО ЧЕЛ!!!!!!");                      
     }
-    }   
+       
       return purchased1;
     }
   }

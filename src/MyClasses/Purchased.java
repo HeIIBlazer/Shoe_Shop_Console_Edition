@@ -1,8 +1,10 @@
 package MyClasses;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class Purchased {
+
+
+public class Purchased implements Serializable  {
     private Client client;
     private Model models;
     private float moneys;
