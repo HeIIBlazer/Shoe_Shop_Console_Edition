@@ -2,14 +2,21 @@
 package MyClasses;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Model implements Serializable {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String ShoeName;
     private String ShoeMaker;
     private float ShoePrice;
-    private ShoeSize[] ShoeSize;
+    private float ShoeSize;
 
     public String getShoeName() {
         return ShoeName;
@@ -35,19 +42,32 @@ public class Model implements Serializable {
         this.ShoePrice = ShoePrice;
     }
 
-    public ShoeSize[] getShoeSize() {
+    @Override
+    public String toString() {
+        return "Model{" + "id=" + id + ", ShoeName=" + ShoeName + ", ShoeMaker=" + ShoeMaker + ", ShoePrice=" + ShoePrice + ", ShoeSize=" + ShoeSize + '}';
+    }
+
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public float getShoeSize() {
         return ShoeSize;
     }
 
-    public void setShoeSize(ShoeSize[] ShoeSize) {
+    public void setShoeSize(float ShoeSize) {
         this.ShoeSize = ShoeSize;
     }
 
+    
 
-    @Override
-    public String toString() {
-        return "Model{" + "ShoeName=" + ShoeName + ", ShoeMaker=" + ShoeMaker + ", ShoePrice=" + ShoePrice + ", ShoeSize=" + Arrays.toString(ShoeSize) + '}';
-    }
+
 
 
 

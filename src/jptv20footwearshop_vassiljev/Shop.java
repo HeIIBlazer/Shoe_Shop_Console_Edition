@@ -6,19 +6,27 @@ import java.util.Scanner;
 import MyClasses.Client;
 import MyClasses.Purchased;
 import MyClasses.Model;
-import MyClasses.ShoeSize;
-import java.util.Arrays;
-import tools.SaveToFile;
+import java.util.ArrayList;
+import java.util.List;
+import tools.SaverToFile;
+import MyClasses.AllCash;
+import tools.SaverToBase;
+
 public class Shop {
    private Scanner scanner = new Scanner(System.in);
-   private Client[] clients= new Client[10];
-   private Model[] models=new Model[10];
-   private Purchased[] purchased=new Purchased[10];
-   private Keeping keeper= new SaveToFile();
+   private List<Client> clients= new ArrayList<>();
+   private List<Model> models=new ArrayList<>();
+   private List<Purchased> purchased=new ArrayList<>();
+   private AllCash allcash= new AllCash();
+   private Keeping keeper = new SaverToBase(); 
+   //private Keeping keeper= new SaverToFile();
+   int numberModel=0;
+   int numberClient=0;
 public Shop() {
     clients =keeper.loadClients();
     models=keeper.loadModels();
     purchased=keeper.loadHistories();
+    allcash=keeper.loadAllCash();
     }
    
    float allCash=0;
@@ -28,11 +36,12 @@ public Shop() {
             System.out.println("--------------------------------------");
             System.out.println("0: Выход из программы");
             System.out.println("1: Ввод Информация покупателе");
-            System.out.println("2: Информация о покупателях");
-            System.out.println("3: Ввод информации о продукте");
-            System.out.println("4: Информация о продуктах");
-            System.out.println("5: Покупка обуви");
-            System.out.println("6: Сколько зараболтал магазин за все времяе");
+            System.out.println("2: Добавить деньги пользователю");
+            System.out.println("3: Информация о покупателях");
+            System.out.println("4: Ввод информации об модели обуви");
+            System.out.println("5: Информация об модели обуви");
+            System.out.println("6: Покупка обуви");
+            System.out.println("7: Сколько зараболтал магазин за все время");
             System.out.print("Выберети номер задачи: ");
             int task = scanner.nextInt(); scanner.nextLine();
             
@@ -43,53 +52,25 @@ public Shop() {
                     System.out.println("ДАВАЙ ДО ЗАВТРА!!!!!!");
                     break;
                 case 1:
-                    System.out.println("--------Ввод информации о покупателе----------");
-                    for (int i = 0; i < clients.length; i++) {
-                        if(clients[i]==null){
-                        clients[i]= addClient();
-                        keeper.saveClient(clients);
-                        break;    
-                        }
-                    }
+                    addClient();                  
                     break;
                 case 2:
-                    System.out.println("-------------Список покупателей-------------");
-                    for (int i = 0; i < clients.length; i++) {
-                        if(clients[i]!=null)
-                            System.out.println(clients[i].toString());
-                    }
-                break;
+                    addMoneyClient();
+                    break;
                 case 3:
-                    System.out.println("-------------Ввод информации об обувии----------------");
-                    for (int i = 0; i < models.length; i++) {
-                        if(models[i]==null){
-                            models[i]=addModel();
-                            keeper.saveModel(models);
-                            break;
-                        }
-                    }
-                break;
+                    printListClients();
+                    break;
                 case 4:
-                    System.out.println("-------------Cписок обуви-------------");
-                    for (int i = 0; i < models.length; i++) {
-                        if(models[i]!=null){
-                            System.out.println(models[i].toString());
-                        }
-                        }
-                break;
+                    addModel();
+                    break;
                 case 5:
-                    System.out.println("-------------------Покупка обуви------------");
-                        for (int i = 0; i < purchased.length; i++) {  
-                        if(purchased[i]==null){
-                            purchased[i]=addPurchased();
-                            keeper.savePurchased(purchased);
-                            break;
-                        }
-                        }
-                break;
+                    printListModels();
+                    break;
                 case 6:
-                    System.out.println("---------Сколько магазин заработал------------");
-                    System.out.println(allCash);
+                    addPurchased();
+                    break;
+                case 7:
+                    printAllCash();
                     break;
           
                 default:
@@ -97,77 +78,120 @@ public Shop() {
             }
      }while("r".equals(repeat));   
     }
-  private Client addClient(){
+  private void addClient(){
+      System.out.println("----Ввод информации о покупателе----");
       Client client=new Client();
-      System.out.println("Введите имя клиента: ");
+      System.out.print("Введите личный код клиента: ");
+      client.setClientNumber(scanner.nextLong());scanner.nextLine();
+      System.out.print("Введите имя клиента: ");
       client.setFirstName(scanner.nextLine());
-      System.out.println("Введите фамилию клинта: ");
+      System.out.print("Введите фамилию клинта: ");
       client.setSecondName(scanner.nextLine());
-      System.out.println("Введите номер телефона: ");
+      System.out.print("Введите номер телефона: ");
       client.setPhone(scanner.nextLine());
-      System.out.println("Введите сумму клиента: ");
+      System.out.print("Введите сумму клиента: ");
       client.setMoney(scanner.nextFloat());
-      return client;
+      clients.add(client);
+      keeper.saveClient(clients);
+}
+  private void addMoneyClient(){
+      System.out.println("----Добавление денег клиенту на счет ----");
+        System.out.println(1+1);printListClients();
+        System.out.println("Выберите личный код клиента: ");
+        long nomer =scanner.nextLong();
+
+        for (int i = 0; i < clients.size(); i++) {
+            if(nomer == clients.get(i).getClientNumber()){
+                System.out.println("Введите сумму которую хотите добавить клиенту: ");
+                float newCash= scanner.nextFloat();
+                newCash=newCash+ clients.get(i).getMoney();
+                clients.get(i).setMoney(newCash);
+                System.out.println(clients.get(i).getMoney()+" На счету у "+ clients.get(i).getFirstName());
+                break;
+                
+            }else{
+                System.out.println("Такого клиента нет!");
+                break;
+            }           
+    
+        }
   }
-  private Model addModel(){
+  private void printListClients(){
+    System.out.println("----Список клиентов----");
+    for (int i = 0; i < clients.size(); i++) {
+        if(clients.get(i)!=null){
+            System.out.println(clients.get(i).toString());
+        }
+    }
+  }
+  private void addModel(){
+      System.out.println("----Ввод информации об модели обуви----");
       Model model= new Model();
-      System.out.println("Введите название обуви : ");
+      System.out.print("Введите название обуви : ");
       model.setShoeName(scanner.nextLine());
-      System.out.println("Введите имя компании производителя: ");
+      System.out.print("Введите имя компании производителя: ");
       model.setShoeMaker(scanner.nextLine());
-      System.out.println("Введите цену обуви: ");
+      System.out.print("Введите цену обуви: ");
       model.setShoePrice(scanner.nextFloat());
-      System.out.println("Сколько размеров эта пара имеет?: ");
-      int kolvo=scanner.nextInt();
-      ShoeSize[] shoeSize = new ShoeSize[kolvo];
-      for (int i = 0; i < kolvo; i++) {
-          ShoeSize size= new ShoeSize();
-          System.out.println("Введите размер обуви: ");
-          
-          size.setShoeSize(scanner.nextInt());scanner.nextLine();
-          shoeSize[i]=size;
-      }
-      model.setShoeSize(shoeSize);
-      
-      return model;
+      System.out.print("Введите размер обуви: ");
+      model.setShoeSize(scanner.nextFloat());scanner.nextLine();
+      models.add(model);
+      keeper.saveModel(models);
   }
-  private Purchased addPurchased(){
+  private void printListModels(){
+    System.out.println("----Cписок обуви----");
+        for (int i = 0; i < models.size(); i++) {
+            if(models.get(i)!=null){
+                System.out.print(i+1+". Производитель "+models.get(i).getShoeMaker());
+                System.out.print(" Модель "+models.get(i).getShoeName());
+                System.out.println(" Стоимость "+models.get(i).getShoePrice());
+            }
+        }
+  }
+  private void addPurchased(){
+      System.out.println("----Покупка обуви----");
+      allCash=allcash.getAllMoney();
       Purchased purchased1= new Purchased();
         System.out.println("--Список покупателей--");
-        for (int i = 0; i < clients.length; i++) {
-            if(clients[i]!= null){
-                System.out.println(i+1+": "+clients[i].toString());
+        for (int i = 0; i < clients.size(); i++) {
+            if(clients.get(i)!= null){
+                System.out.println(i+1+": "+clients.get(i).toString());
             }
         }
         System.out.println("Введите номер покупателя");
-        int numberClient=scanner.nextInt();scanner.nextLine();
+        numberClient=scanner.nextInt();scanner.nextLine();
         System.out.println("--Список обуви--");
-        for (int i = 0; i < models.length; i++) {
-            if(models[i]!=null){
-                System.out.println(i+1+": "+models[i].toString());
+        for (int i = 0; i < models.size(); i++) {
+            if(models.get(i)!=null){
+                System.out.println(i+1+": "+models.get(i).toString());
             }
         }
         System.out.println("Какую пару обуви вы бы хотели приобрести?: ");
-        int numberModel=scanner.nextInt();scanner.nextLine();
-        System.out.println("Размеры этой пары");
-        for (int i = 0; i < models.length; i++) {
-            if(models[i]!=null){
-                System.out.println(i+1+": "+Arrays.toString(models[numberModel-1].getShoeSize()));
-            }
-        }
-        System.out.println("Какой размер вас интерисует?: ");
-        
-        purchased1.setModels(models[numberModel-1]);
-        purchased1.setClient(clients[numberClient-1]);       
+        numberModel=scanner.nextInt();scanner.nextLine();
+        purchased1.setModels(models.get(numberModel-1));
+        purchased1.setClient(clients.get(numberClient-1));       
         if(purchased1.getClient().getMoney()>=purchased1.getModels().getShoePrice()){
-            clients[numberClient-1].setMoney(clients[numberClient-1].getMoney()-models[numberModel-1].getShoePrice());
-            allCash+=models[numberModel-1].getShoePrice();
+            clients.get(numberClient-1).setMoney(clients.get(numberClient-1).getMoney()-models.get(numberModel-1).getShoePrice());
+            allCash+=models.get(numberModel-1).getShoePrice();
+            AllCash();
+            purchased.add(purchased1);
+            keeper.savePurchased(purchased);
+            keeper.saveClient(clients);
+            numberModel=0;
+            numberClient=0;
         }
         else{
-            System.out.println("ДЕНЕГ МАЛО ЧЕЛ!!!!!!");                      
+            System.out.println("ДЕНЕГ МАЛО ЧЕЛ!!!!!!"); 
+            numberModel=0;
+            numberClient=0;
+    }       
+        }
+    private void  AllCash(){ 
+            allcash.setAllMoney(allCash);
+            keeper.saveAllCash(allcash);     
+       }
+    private void printAllCash(){
+        System.out.println("Магазин заработал: "+ allcash.getAllMoney());
+            }
     }
-       
-      return purchased1;
-    }
-  }
-
+    

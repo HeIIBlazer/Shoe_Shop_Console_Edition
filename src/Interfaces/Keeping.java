@@ -1,17 +1,23 @@
 
 package Interfaces;
 
+import MyClasses.AllCash;
 import MyClasses.Client;
 import MyClasses.Model;
 import MyClasses.Purchased;
 
+import java.util.List;
+
 
 public interface Keeping {
 
-    public  void saveModel(Model[] models);
-    public Model[] loadModels();
-    public  void saveClient(Client[] clients);
-    public Client[] loadClients();
-    public  void savePurchased(Purchased[] purchased);
-    public Purchased[] loadHistories();
+    public  void saveModel(List<Model> models);
+    public List<Model> loadModels();
+    public  void saveClient(List<Client> clients);
+    public List<Client> loadClients();
+    public  void savePurchased(List<Purchased> purchased);
+    public List<Purchased> loadHistories();
+    public void saveAllCash (AllCash allcash);
+    public AllCash loadAllCash();
+
 }

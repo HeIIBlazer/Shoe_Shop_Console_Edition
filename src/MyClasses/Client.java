@@ -1,8 +1,16 @@
 package MyClasses;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Client implements Serializable  {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    Long ClientNumber;
     String FirstName;
     String SecondName;
     String Phone;
@@ -43,7 +51,24 @@ public class Client implements Serializable  {
 
     @Override
     public String toString() {
-        return "Client{" + "FirstName=" + FirstName + ", SecondName=" + SecondName + ", Phone=" + Phone + ", Money=" + Money + '}';
+        return "Client{" + "ClientNumber=" + ClientNumber + ", FirstName=" + FirstName + ", SecondName=" + SecondName + ", Phone=" + Phone + ", Money=" + Money + '}';
+    }
+
+
+
+    public Long getClientNumber() {
+        return ClientNumber;
+    }
+
+    public void setClientNumber(Long ClientNumber) {
+        this.ClientNumber = ClientNumber;
+    }
+        public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 
