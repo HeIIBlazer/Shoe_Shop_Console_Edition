@@ -2,10 +2,10 @@
 package tools;
 
 import Interfaces.Keeping;
-import MyClasses.AllCash;
-import MyClasses.Client;
-import MyClasses.Model;
-import MyClasses.Purchased;
+import entity.AllCash;
+import entity.Client;
+import entity.Model;
+import entity.Purchased;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

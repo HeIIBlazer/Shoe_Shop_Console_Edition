@@ -1,8 +1,8 @@
 
-package MyClasses;
+package entity;
 
 import java.io.Serializable;
-
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +17,7 @@ public class Model implements Serializable {
     private String ShoeMaker;
     private float ShoePrice;
     private float ShoeSize;
+    
 
     public String getShoeName() {
         return ShoeName;
@@ -49,6 +50,8 @@ public class Model implements Serializable {
 
 
 
+
+
     public Long getId() {
         return id;
     }
@@ -64,6 +67,7 @@ public class Model implements Serializable {
     public void setShoeSize(float ShoeSize) {
         this.ShoeSize = ShoeSize;
     }
+
 
     
 

@@ -2,10 +2,10 @@
 package tools;
 
 import Interfaces.Keeping;
-import MyClasses.AllCash;
-import MyClasses.Client;
-import MyClasses.Model;
-import MyClasses.Purchased;
+import entity.AllCash;
+import entity.Client;
+import entity.Model;
+import entity.Purchased;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,6 +25,8 @@ public class SaverToBase implements Keeping {
             for (int i = 0; i < models.size(); i++) {
                 if(models.get(i).getId() == null){
                     em.persist(models.get(i));
+                }else{
+                    em.merge(models.get(i));
                 }
             }
         tx.commit();
@@ -48,7 +50,9 @@ public class SaverToBase implements Keeping {
         for (int i = 0; i < clients.size(); i++) {
             if(clients.get(i).getId() == null){
                 em.persist(clients.get(i));
-                }
+                }else{
+                em.merge(clients.get(i));
+            }
             }
         tx.commit();
     }
@@ -71,7 +75,9 @@ public class SaverToBase implements Keeping {
         for (int i = 0; i < purchased.size(); i++) {
             if(purchased.get(i).getId() == null){
                 em.persist(purchased.get(i));
-                }
+                }else{
+                em.merge(purchased.get(i));
+            }
             }
         tx.commit();
     }
@@ -94,7 +100,9 @@ public class SaverToBase implements Keeping {
         for (int i = 0; i < allcash.size(); i++) {
             if(allcash.get(i).getId() == null){
                 em.persist(allcash.get(i));
-                }
+                }else{
+                em.merge(allcash.get(i));
+            }
             }
         tx.commit();
     }

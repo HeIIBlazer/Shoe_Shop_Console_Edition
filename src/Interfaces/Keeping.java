@@ -1,10 +1,10 @@
 
 package Interfaces;
 
-import MyClasses.AllCash;
-import MyClasses.Client;
-import MyClasses.Model;
-import MyClasses.Purchased;
+import entity.AllCash;
+import entity.Client;
+import entity.Model;
+import entity.Purchased;
 
 import java.util.List;
 

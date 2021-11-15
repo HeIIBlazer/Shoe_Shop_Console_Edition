@@ -1,19 +1,28 @@
-package MyClasses;
+package entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
 public class Purchased implements Serializable  {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Client client;
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Model models;
     private float moneys;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date PurchasedDate;
 
     public Client getClient() {
         return client;
@@ -41,8 +50,9 @@ public class Purchased implements Serializable  {
 
     @Override
     public String toString() {
-        return "Purchased{" + "client=" + client + ", models=" + models + ", moneys=" + moneys + '}';
+        return "Purchased{" + "id=" + id + ", client=" + client + ", models=" + models + ", moneys=" + moneys + ", PurchasedDate=" + PurchasedDate + '}';
     }
+
 
     public Long getId() {
         return id;
@@ -50,6 +60,14 @@ public class Purchased implements Serializable  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getPurchasedDate() {
+        return PurchasedDate;
+    }
+
+    public void setPurchasedDate(Date PurchasedDate) {
+        this.PurchasedDate = PurchasedDate;
     }
     
 
