@@ -17,7 +17,7 @@ public interface Keeping {
     public List<Client> loadClients();
     public  void savePurchased(List<Purchased> purchased);
     public List<Purchased> loadHistories();
-    public void saveAllCash (AllCash allcash);
-    public AllCash loadAllCash();
+    public void saveAllCash (List<AllCash> allcash);
+    public List<AllCash> loadAllCash();
 
 }

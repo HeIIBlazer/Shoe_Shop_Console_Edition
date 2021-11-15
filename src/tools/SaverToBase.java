@@ -89,20 +89,25 @@ public class SaverToBase implements Keeping {
     }
 
     @Override
-    public void saveAllCash(AllCash allcash) {
+    public void saveAllCash(List<AllCash> allcash) {
         tx.begin();
-        em.persist(allcash);
+        for (int i = 0; i < allcash.size(); i++) {
+            if(allcash.get(i).getId() == null){
+                em.persist(allcash.get(i));
+                }
+            }
         tx.commit();
     }
 
     @Override
-    public AllCash loadAllCash() {
-        AllCash allcash=null;
+    public List<AllCash> loadAllCash() {
+        List<AllCash> allcash=null;
         try {
-            allcash = (AllCash) em.createQuery("SELECT allcash FROM AllCash allcash");
+            allcash =em.createQuery("SELECT allcash FROM AllCash allcash")
+                    .getResultList();
                 
         } catch (Exception e) {
-            return new AllCash();
+            return new ArrayList();
         }
         return allcash;
     }

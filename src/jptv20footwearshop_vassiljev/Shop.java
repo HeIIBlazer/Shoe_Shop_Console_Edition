@@ -1,4 +1,3 @@
-
 package jptv20footwearshop_vassiljev;
 
 import Interfaces.Keeping;
@@ -17,7 +16,7 @@ public class Shop {
    private List<Client> clients= new ArrayList<>();
    private List<Model> models=new ArrayList<>();
    private List<Purchased> purchased=new ArrayList<>();
-   private AllCash allcash= new AllCash();
+   private List<AllCash> allcash= new ArrayList<>();
    private Keeping keeper = new SaverToBase(); 
    //private Keeping keeper= new SaverToFile();
    int numberModel=0;
@@ -71,6 +70,11 @@ public Shop() {
                     break;
                 case 7:
                     printAllCash();
+                    for (int i = 0; i < purchased.size(); i++) {
+                    System.out.println(purchased.get(i));
+                    break;
+                        
+                    }
                     break;
           
                 default:
@@ -107,20 +111,23 @@ public Shop() {
                 newCash=newCash+ clients.get(i).getMoney();
                 clients.get(i).setMoney(newCash);
                 System.out.println(clients.get(i).getMoney()+" На счету у "+ clients.get(i).getFirstName());
+                keeper.saveClient(clients);
                 break;
                 
-            }else{
-                System.out.println("Такого клиента нет!");
-                break;
-            }           
+          
     
         }
+  }
   }
   private void printListClients(){
     System.out.println("----Список клиентов----");
     for (int i = 0; i < clients.size(); i++) {
         if(clients.get(i)!=null){
-            System.out.println(clients.get(i).toString());
+            System.out.println(i+1+". Личный код:" + clients.get(i).getClientNumber());
+            System.out.println("   Имя: "+clients.get(i).getFirstName());
+            System.out.println("   Фамилия: "+clients.get(i).getSecondName());
+            System.out.println("   Сумма: "+clients.get(i).getMoney());
+            System.out.println(" ");
         }
     }
   }
@@ -142,15 +149,18 @@ public Shop() {
     System.out.println("----Cписок обуви----");
         for (int i = 0; i < models.size(); i++) {
             if(models.get(i)!=null){
-                System.out.print(i+1+". Производитель "+models.get(i).getShoeMaker());
-                System.out.print(" Модель "+models.get(i).getShoeName());
-                System.out.println(" Стоимость "+models.get(i).getShoePrice());
+                System.out.println(i+1+". Производитель: "+models.get(i).getShoeMaker());
+                System.out.println("   Модель: " +models.get(i).getShoeName());
+                System.out.println("   Стоимость: "+models.get(i).getShoePrice());
+                System.out.println(" ");
             }
         }
   }
   private void addPurchased(){
       System.out.println("----Покупка обуви----");
-      allCash=allcash.getAllMoney();
+       for (int i = 0; i < allcash.size(); i++) {
+            allCash=allcash.get(i).getAllMoney();
+       }
       Purchased purchased1= new Purchased();
         System.out.println("--Список покупателей--");
         for (int i = 0; i < clients.size(); i++) {
@@ -186,12 +196,16 @@ public Shop() {
             numberClient=0;
     }       
         }
-    private void  AllCash(){ 
-            allcash.setAllMoney(allCash);
-            keeper.saveAllCash(allcash);     
+    private void  AllCash(){
+        for (int i = 0; i < allcash.size(); i++) {
+            allcash.get(i).setAllMoney(allCash);
+            keeper.saveAllCash(allcash); 
+        }
        }
     private void printAllCash(){
-        System.out.println("Магазин заработал: "+ allcash.getAllMoney());
+        for (int i = 0; i < allcash.size(); i++) {
+        System.out.println("Магазин заработал: "+ allcash.get(i).getAllMoney());
+            break;
             }
     }
-    
+    }

@@ -6,7 +6,6 @@ import MyClasses.AllCash;
 import MyClasses.Client;
 import MyClasses.Model;
 import MyClasses.Purchased;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -129,7 +128,7 @@ public class SaverToFile implements Keeping{
     }
 
     @Override
-    public void saveAllCash(AllCash allcash) {
+    public void saveAllCash(List<AllCash> allcash) {
         FileOutputStream fos=null;
         ObjectOutputStream oos = null;
     try{
@@ -145,14 +144,14 @@ public class SaverToFile implements Keeping{
     }
 
     @Override
-    public AllCash loadAllCash() {
-        AllCash allcash= new AllCash();
+    public List<AllCash> loadAllCash() {
+        List<AllCash> allcash = new ArrayList<>();
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try{
             fis = new FileInputStream("allcash");
             ois= new ObjectInputStream(fis);
-            allcash = (AllCash) ois.readObject();
+            allcash = (List<AllCash>)ois.readObject();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SaverToFile.class.getName()).log(Level.INFO, "Файл allcash еще не создан", ex);
         } catch (IOException ex) {
@@ -199,6 +198,7 @@ public class SaverToFile implements Keeping{
         
         return shoesize;
     }*/
+
 
 
     
