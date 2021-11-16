@@ -10,8 +10,16 @@ import javax.persistence.Id;
 @Entity
 public class AllCash implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     float AllMoney;
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long Id) {
+        this.Id = Id;
+    }
 
     public float getAllMoney() {
         return AllMoney;
@@ -21,17 +29,9 @@ public class AllCash implements Serializable {
         this.AllMoney = AllMoney;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "AllCash{" + "AllMoney=" + AllMoney + '}';
     }
-    
+   
 }

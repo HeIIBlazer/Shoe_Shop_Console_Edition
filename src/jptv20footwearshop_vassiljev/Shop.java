@@ -28,14 +28,14 @@ public class Shop {
    String[] monthsNames = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"};
    int numberModel=0;
    int numberClient=0;
+   float Gain = 0;
+   AllCash cash =new AllCash();
 public Shop() {
     clients =keeper.loadClients();
     models=keeper.loadModels();
     purchased=keeper.loadHistories();
     allcash=keeper.loadAllCash();
     }
-   
-   float Gain=0;
    public void run(){
     String repeat ="r";
         do{ 
@@ -53,6 +53,9 @@ public Shop() {
             System.out.println("10: Сколько зараболтал магазин за определенный месяц");
             System.out.print("Выберети номер задачи: ");
             int task = scanner.nextInt(); scanner.nextLine();
+            for (int i = 0; i < allcash.size(); i++) {
+            Gain=allcash.get(i).getAllMoney();
+             }
             
             switch(task){
 
@@ -84,13 +87,11 @@ public Shop() {
                     addPurchased();
                     break;
                 case 9:
-                printAllCash();
-                 break;
-                case 10:
-                allCashForMonth();
+                    printAllCash();
                 break;
-                
-          
+                case 10:
+                    allCashForMonth();
+                break;
                 default:
                     System.out.println("Введите номер из списка!!!");
             }
@@ -255,9 +256,6 @@ public Shop() {
   }
   private void addPurchased(){
       System.out.println("----Покупка обуви----");
-       for (int i = 0; i < allcash.size(); i++) {
-            Gain=allcash.get(i).getAllMoney();
-       }
       Purchased purchased1= new Purchased();
         System.out.println("--Список покупателей--");
         for (int i = 0; i < clients.size(); i++) {
@@ -281,7 +279,12 @@ public Shop() {
         if(purchased1.getClient().getMoney()>=purchased1.getModels().getShoePrice()){
             clients.get(numberClient-1).setMoney(clients.get(numberClient-1).getMoney()-models.get(numberModel-1).getShoePrice());
             Gain+=models.get(numberModel-1).getShoePrice();
-            AllCash();
+            cash.setAllMoney(Gain);
+        for (int i = 0; i < allcash.size(); i++) {  
+            allcash.add(cash);
+            keeper.saveAllCash(allcash); 
+        }
+       
             purchased.add(purchased1);
             keeper.savePurchased(purchased);
             keeper.saveClient(clients);
@@ -295,8 +298,8 @@ public Shop() {
     }       
         }
     private void  AllCash(){
-        for (int i = 0; i < allcash.size(); i++) {
-            allcash.get(i).setAllMoney(Gain);
+        for (int i = 0; i < allcash.size(); i++) {  
+            allcash.add(cash);
             keeper.saveAllCash(allcash); 
         }
        }
@@ -307,6 +310,7 @@ public Shop() {
             }
     }
     private void allCashForMonth(){
+        System.out.println("----Вывод прибыли за выбранный месяц---");
         System.out.print("Выберите месяц в виде числа: ");
         int month = scanner.nextInt();
         float Moneysss=0;
@@ -318,6 +322,8 @@ public Shop() {
         }
         if (Moneysss != 0){
             System.out.println("Прибыль магазина за " + monthsNames[month-1]+": "+Moneysss);
+        }else{
+            System.out.println("Дохода не было!");
         }
     }
     }
