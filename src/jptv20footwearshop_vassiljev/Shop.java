@@ -129,32 +129,42 @@ public Shop() {
               System.out.println("4: Смена номера телефона");
               System.out.print("Выберете номер задачи: ");
               int task1= scanner.nextInt();scanner.nextLine();
+              System.out.println(" ");
               switch(task1){
                   case 1:
                       System.out.print("Введите новое имя: ");
                       clients.get(i).setFirstName(scanner.nextLine());
                       keeper.saveClient(clients);
+                      System.out.println(" ");
+                      System.out.println("Имя изменено на: " + clients.get(i).getFirstName());
                       break;
                   case 2:
                       System.out.print("Введите новую фамилию: ");
                       clients.get(i).setSecondName(scanner.nextLine());
                       keeper.saveClient(clients);
+                      System.out.println("");
+                      System.out.println("Фамилия изменена на: " + clients.get(i).getSecondName());
                       break;
                   case 3:
                       System.out.print("Введите новый личный код: ");
                       clients.get(i).setClientNumber(scanner.nextLong());scanner.nextLine();
                       keeper.saveClient(clients);
+                      System.out.println("");
+                      System.out.println("Личный код изменен на: " + clients.get(i).getClientNumber());
                       break;
                   case 4:
                       System.out.println("Введите новый номер телефона: ");
                       clients.get(i).setPhone(scanner.nextLine());
                       keeper.saveClient(clients);
+                      System.out.println("");
+                      System.out.println("Номер телефона изменен на: " + clients.get(i).getPhone());
                       break;
               }
+              
           }
          
       }
-        System.out.println("----------------------------");
+      
   }
   private void addMoneyClient(){
       System.out.println("----Добавление денег клиенту на счет ----");
@@ -216,32 +226,40 @@ public Shop() {
               System.out.println("4: Смена размера модели");
               System.out.print("Выберете номер задачи: ");
               int task1= scanner.nextInt();scanner.nextLine();
+              System.out.println("");
               switch(task1){
                   case 1:
                       System.out.print("Введите нового производителя: ");
                       models.get(i).setShoeMaker(scanner.nextLine());
                       keeper.saveModel(models);
+                      System.out.println("");
+                      System.out.println("Производитель сменен на: " + models.get(i).getShoeMaker());
                       break;
                   case 2:
                       System.out.print("Введите новое название модели: ");
                       models.get(i).setShoeName(scanner.nextLine());
                       keeper.saveModel(models);
+                      System.out.println("");
+                      System.out.println("Название модели изменен на: " + models.get(i).getShoeName());
                       break;
                   case 3:
                       System.out.print("Введите новую стоймость: ");
                       models.get(i).setShoePrice(scanner.nextFloat());scanner.nextLine();
                       keeper.saveModel(models);
+                      System.out.println("");
+                      System.out.println("Цена модели изменена на: " + models.get(i).getShoePrice());
                       break;
                   case 4:
                       System.out.println("Введите новый размер модели: ");
                       models.get(i).setShoeSize(scanner.nextFloat());scanner.nextLine();
                       keeper.saveModel(models);
+                      System.out.println("");
+                      System.out.println("Размер изменен на: " + models.get(i).getShoeSize());
                       break;
               }
           }
          
       }
-        System.out.println("----------------------------");
   }
   private void printListModels(){
     System.out.println("----Cписок обуви----");
@@ -280,11 +298,7 @@ public Shop() {
             clients.get(numberClient-1).setMoney(clients.get(numberClient-1).getMoney()-models.get(numberModel-1).getShoePrice());
             Gain+=models.get(numberModel-1).getShoePrice();
             cash.setAllMoney(Gain);
-        for (int i = 0; i < allcash.size(); i++) {  
-            allcash.add(cash);
-            keeper.saveAllCash(allcash); 
-        }
-       
+            AllCash();
             purchased.add(purchased1);
             keeper.savePurchased(purchased);
             keeper.saveClient(clients);
