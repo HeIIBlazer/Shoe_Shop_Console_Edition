@@ -15,7 +15,7 @@ import javax.persistence.Persistence;
 
 
 public class SaverToBase implements Keeping {
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyFOotPU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTV20MyFootWearShopPU");
     private EntityManager em = emf.createEntityManager();
     private EntityTransaction tx = em.getTransaction();
 

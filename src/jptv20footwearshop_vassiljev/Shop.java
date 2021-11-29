@@ -1,28 +1,27 @@
 package jptv20footwearshop_vassiljev;
 
-import Interfaces.Keeping;
+import Facade.AllCashFacade;
+import Facade.ClientFacade;
+import Facade.ModelFacade;
+import Facade.PurchasedFacade;
 import java.util.Scanner;
 import entity.Client;
 import entity.Purchased;
 import entity.Model;
-import java.util.ArrayList;
-import java.util.List;
-import tools.SaverToFile;
 import entity.AllCash;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import tools.SaverToBase;
+import java.util.List;
+import static org.omg.CORBA.ORB.init;
 
 public class Shop {
    private Scanner scanner = new Scanner(System.in);
-   private List<Client> clients= new ArrayList<>();
-   private List<Model> models=new ArrayList<>();
-   private List<Purchased> purchased=new ArrayList<>();
-   private List<AllCash> allcash= new ArrayList<>();
-   private Keeping keeper = new SaverToBase(); 
-   //private Keeping keeper= new SaverToFile();
+   private AllCashFacade allCashFacade;
+   private ClientFacade clientFacade;
+   private ModelFacade modelFacade;
+   private PurchasedFacade purchasedFacade;
    Calendar calendar = Calendar.getInstance();
    Date date = calendar.getTime();
    String[] monthsNames = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"};
@@ -31,11 +30,14 @@ public class Shop {
    float Gain = 0;
    AllCash cash =new AllCash();
 public Shop() {
-    clients =keeper.loadClients();
-    models=keeper.loadModels();
-    purchased=keeper.loadHistories();
-    allcash=keeper.loadAllCash();
+    init();
     }
+private void init(){
+    allCashFacade = new AllCashFacade(AllCash.class);
+    clientFacade = new ClientFacade (Client.class);
+    modelFacade = new ModelFacade (Model.class);
+    purchasedFacade =new PurchasedFacade (Purchased.class);
+}
    public void run(){
     String repeat ="r";
         do{ 
@@ -53,8 +55,9 @@ public Shop() {
             System.out.println("10: Сколько зараболтал магазин за определенный месяц");
             System.out.print("Выберети номер задачи: ");
             int task = scanner.nextInt(); scanner.nextLine();
+            List<AllCash> allcash = allCashFacade.findAll();
             for (int i = 0; i < allcash.size(); i++) {
-            Gain=allcash.get(i).getAllMoney();
+                Gain=allcash.get(i).getAllMoney();
              }
             
             switch(task){
@@ -112,17 +115,16 @@ public Shop() {
       client.setPhone(scanner.nextLine());
       System.out.print("Введите сумму клиента: ");
       client.setMoney(scanner.nextFloat());
-      clients.add(client);
-      keeper.saveClient(clients);
+      clientFacade.create(client);
 }
   
   private void changeClientInfo(){
       System.out.println("----Изменение информации об клиенте----");
       printListClients();
-      System.out.print("Введите личный код клиента: ");
+      System.out.print("Введите Номер клиента: ");
       long nomer= scanner.nextLong();
-      for (int i = 0; i < clients.size(); i++) {
-          if(nomer==clients.get(i).getClientNumber()){
+      Client clients = clientFacade.find(nomer);
+          if(nomer==clients.getId()){
               System.out.println("1: Смена имени");
               System.out.println("2: Смена фамилии");
               System.out.println("3: Смена личного кода");
@@ -133,31 +135,31 @@ public Shop() {
               switch(task1){
                   case 1:
                       System.out.print("Введите новое имя: ");
-                      clients.get(i).setFirstName(scanner.nextLine());
-                      keeper.saveClient(clients);
+                      clients.setFirstName(scanner.nextLine());
+                      clientFacade.edit(clients);
                       System.out.println(" ");
-                      System.out.println("Имя изменено на: " + clients.get(i).getFirstName());
+                      System.out.println("Имя изменено на: " + clients.getFirstName());
                       break;
                   case 2:
                       System.out.print("Введите новую фамилию: ");
-                      clients.get(i).setSecondName(scanner.nextLine());
-                      keeper.saveClient(clients);
+                      clients.setSecondName(scanner.nextLine());
+                      clientFacade.edit(clients);
                       System.out.println("");
-                      System.out.println("Фамилия изменена на: " + clients.get(i).getSecondName());
+                      System.out.println("Фамилия изменена на: " + clients.getSecondName());
                       break;
                   case 3:
                       System.out.print("Введите новый личный код: ");
-                      clients.get(i).setClientNumber(scanner.nextLong());scanner.nextLine();
-                      keeper.saveClient(clients);
+                      clients.setClientNumber(scanner.nextLong());scanner.nextLine();
+                      clientFacade.edit(clients);
                       System.out.println("");
-                      System.out.println("Личный код изменен на: " + clients.get(i).getClientNumber());
+                      System.out.println("Личный код изменен на: " + clients.getClientNumber());
                       break;
                   case 4:
                       System.out.println("Введите новый номер телефона: ");
-                      clients.get(i).setPhone(scanner.nextLine());
-                      keeper.saveClient(clients);
+                      clients.setPhone(scanner.nextLine());
+                      clientFacade.edit(clients);
                       System.out.println("");
-                      System.out.println("Номер телефона изменен на: " + clients.get(i).getPhone());
+                      System.out.println("Номер телефона изменен на: " + clients.getPhone());
                       break;
               }
               
@@ -165,30 +167,27 @@ public Shop() {
          
       }
       
-  }
+
   private void addMoneyClient(){
       System.out.println("----Добавление денег клиенту на счет ----");
-        System.out.println(1+1);printListClients();
+        System.out.println(1+1); printListClients();
         System.out.print("Выберите личный код клиента: ");
         long nomer =scanner.nextLong();
-
-        for (int i = 0; i < clients.size(); i++) {
-            if(nomer == clients.get(i).getClientNumber()){
+        Client clients = clientFacade.find(nomer);
+            if(nomer == clients.getId()){
                 System.out.println("Введите сумму которую хотите добавить клиенту: ");
                 float newCash= scanner.nextFloat();
-                newCash=newCash+ clients.get(i).getMoney();
-                clients.get(i).setMoney(newCash);
-                System.out.println(clients.get(i).getMoney()+" На счету у "+ clients.get(i).getFirstName());
-                keeper.saveClient(clients);
-                break;
-                
-          
-    
+                newCash=newCash+ clients.getMoney();
+                clients.setMoney(newCash);
+                System.out.println(clients.getMoney()+" На счету у "+ clients.getFirstName());
+                clientFacade.edit(clients);
+               
         }
   }
-  }
+  
   private void printListClients(){
     System.out.println("----Список клиентов----");
+    List<Client> clients = clientFacade.findAll();
     for (int i = 0; i < clients.size(); i++) {
         if(clients.get(i)!=null){
             System.out.println(i+1+". Личный код:" + clients.get(i).getClientNumber());
@@ -210,16 +209,15 @@ public Shop() {
       model.setShoePrice(scanner.nextFloat());
       System.out.print("Введите размер обуви: ");
       model.setShoeSize(scanner.nextFloat());scanner.nextLine();
-      models.add(model);
-      keeper.saveModel(models);
+      modelFacade.create(model);;
   }
   private void changeModelsInfo(){
       System.out.println("----Изменение информации об модели обуви----");
       printListModels();
       System.out.print("Введите ID обуви: ");
       long nomer= scanner.nextLong();
-      for (int i = 0; i < models.size(); i++) {
-          if(nomer==models.get(i).getId()){
+      Model models = modelFacade.find(nomer);
+          if(nomer==models.getId()){
               System.out.println("1: Смена компании производителя");
               System.out.println("2: Смена названия модели");
               System.out.println("3: Смена стоймости модели");
@@ -230,39 +228,40 @@ public Shop() {
               switch(task1){
                   case 1:
                       System.out.print("Введите нового производителя: ");
-                      models.get(i).setShoeMaker(scanner.nextLine());
-                      keeper.saveModel(models);
+                      models.setShoeMaker(scanner.nextLine());
+                      modelFacade.edit(models);
                       System.out.println("");
-                      System.out.println("Производитель сменен на: " + models.get(i).getShoeMaker());
+                      System.out.println("Производитель сменен на: " + models.getShoeMaker());
                       break;
                   case 2:
                       System.out.print("Введите новое название модели: ");
-                      models.get(i).setShoeName(scanner.nextLine());
-                      keeper.saveModel(models);
+                      models.setShoeName(scanner.nextLine());
+                      modelFacade.edit(models);
                       System.out.println("");
-                      System.out.println("Название модели изменен на: " + models.get(i).getShoeName());
+                      System.out.println("Название модели изменен на: " + models.getShoeName());
                       break;
                   case 3:
                       System.out.print("Введите новую стоймость: ");
-                      models.get(i).setShoePrice(scanner.nextFloat());scanner.nextLine();
-                      keeper.saveModel(models);
+                      models.setShoePrice(scanner.nextFloat());scanner.nextLine();
+                      modelFacade.edit(models);
                       System.out.println("");
-                      System.out.println("Цена модели изменена на: " + models.get(i).getShoePrice());
+                      System.out.println("Цена модели изменена на: " + models.getShoePrice());
                       break;
                   case 4:
                       System.out.println("Введите новый размер модели: ");
-                      models.get(i).setShoeSize(scanner.nextFloat());scanner.nextLine();
-                      keeper.saveModel(models);
+                      models.setShoeSize(scanner.nextFloat());scanner.nextLine();
+                      modelFacade.edit(models);
                       System.out.println("");
-                      System.out.println("Размер изменен на: " + models.get(i).getShoeSize());
+                      System.out.println("Размер изменен на: " + models.getShoeSize());
                       break;
               }
           }
          
       }
-  }
+  
   private void printListModels(){
     System.out.println("----Cписок обуви----");
+    List<Model> models = modelFacade.findAll();
         for (int i = 0; i < models.size(); i++) {
             if(models.get(i)!=null){
                 System.out.println(i+1+". Производитель: "+models.get(i).getShoeMaker());
@@ -275,33 +274,29 @@ public Shop() {
   private void addPurchased(){
       System.out.println("----Покупка обуви----");
       Purchased purchased1= new Purchased();
-        System.out.println("--Список покупателей--");
-        for (int i = 0; i < clients.size(); i++) {
-            if(clients.get(i)!= null){
-                System.out.println(i+1+": "+clients.get(i).toString());
-            }
-        }
+      List<Model> models = modelFacade.findAll();
+      List<Client> clients = clientFacade.findAll();
+        
+        printListClients();
         System.out.println("Введите номер покупателя");
         numberClient=scanner.nextInt();scanner.nextLine();
-        System.out.println("--Список обуви--");
-        for (int i = 0; i < models.size(); i++) {
-            if(models.get(i)!=null){
-                System.out.println(i+1+": "+models.get(i).toString());
-            }
-        }
+        
+        printListModels();
         System.out.println("Какую пару обуви вы бы хотели приобрести?: ");
         numberModel=scanner.nextInt();scanner.nextLine();
-        purchased1.setModels(models.get(numberModel-1));
-        purchased1.setClient(clients.get(numberClient-1)); 
+        purchased1.setModels(models.get((int) numberModel-1));
+        purchased1.setClient(clients.get((int)numberClient-1)); 
         purchased1.setPurchasedDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         if(purchased1.getClient().getMoney()>=purchased1.getModels().getShoePrice()){
             clients.get(numberClient-1).setMoney(clients.get(numberClient-1).getMoney()-models.get(numberModel-1).getShoePrice());
             Gain+=models.get(numberModel-1).getShoePrice();
             cash.setAllMoney(Gain);
             AllCash();
-            purchased.add(purchased1);
+            purchasedFacade.create(purchased1);
+            /*purchased.add(purchased1);
             keeper.savePurchased(purchased);
-            keeper.saveClient(clients);
+            keeper.saveClient(clients);*/
+            
             numberModel=0;
             numberClient=0;
         }
@@ -311,13 +306,12 @@ public Shop() {
             numberClient=0;
     }       
         }
-    private void  AllCash(){
-        for (int i = 0; i < allcash.size(); i++) {  
-            allcash.add(cash);
-            keeper.saveAllCash(allcash); 
-        }
+    private void  AllCash(){ 
+            allCashFacade.create(cash);
+        
        }
     private void printAllCash(){
+        List<AllCash> allcash = allCashFacade.findAll();
         for (int i = 0; i < allcash.size(); i++) {
         System.out.println("Магазин заработал: "+ allcash.get(i).getAllMoney());
             break;
@@ -328,6 +322,7 @@ public Shop() {
         System.out.print("Выберите месяц в виде числа: ");
         int month = scanner.nextInt();
         float Moneysss=0;
+        List<Purchased> purchased = purchasedFacade.findAll();
         for (int i = 0; i < purchased.size(); i++) {
             if(purchased.get(i).getPurchasedDate().getMonth()+1==month){
                Moneysss+= purchased.get(i).getModels().getShoePrice();
